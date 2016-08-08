@@ -1,6 +1,9 @@
 package com.sunnywr.dao;
 import com.sunnywr.bean.Message;
+import com.sunnywr.db.DBAccess;
+import org.apache.ibatis.session.SqlSession;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
