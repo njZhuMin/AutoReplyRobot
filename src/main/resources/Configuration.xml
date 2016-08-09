@@ -29,6 +29,8 @@
     </environments>
 
     <mappers>
-        <mapper resource="sqlXml/User.xml"/>
+        <mapper resource="sqlXml/Message.xml"/>
+        <mapper resource="sqlXml/Command.xml"/>
+        <mapper resource="sqlXml/CommandContent.xml"/>
     </mappers>
 </configuration>

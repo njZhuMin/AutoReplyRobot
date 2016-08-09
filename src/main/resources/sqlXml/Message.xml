@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Message">
+    <resultMap type="com.sunnywr.bean.Message" id="MessageResult">
+        <id column="ID" jdbcType="INTEGER" property="id"/>
+        <result column="COMMAND" jdbcType="VARCHAR" property="command"/>
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="CONTENT" jdbcType="VARCHAR" property="content"/>
+    </resultMap>
+
+    <select id="queryMessageList" parameterType="com.sunnywr.bean.Message" resultMap="MessageResult">
+        SELECT <include refid="columns"/> FROM message
+        <where>
+            <if test="command != null and !&quot;&quot;.equals(command.trim())">
+                AND COMMAND=#{command}
+            </if>
+            <if test="description != null and !&quot;&quot;.equals(description.trim())">
+                AND DESCRIPTION LIKE '%' #{description} '%'
+            </if>
+        </where>
+    </select>
+
+    <sql id="columns">ID,COMMAND,DESCRIPTION,CONTENT</sql>
+
+    <delete id="deleteOne" parameterType="int">
+        DELETE FROM message WHERE ID = #{_parameter}
+    </delete>
+
+    <delete id="deleteMulti" parameterType="java.util.List">
+        DELETE FROM message WHERE ID IN(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </delete>
+</mapper>
