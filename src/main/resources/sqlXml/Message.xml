@@ -4,7 +4,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="Message">
+<mapper namespace="com.sunnywr.dao.MessageImpl">
     <resultMap type="com.sunnywr.bean.Message" id="MessageResult">
         <id column="ID" jdbcType="INTEGER" property="id"/>
         <result column="COMMAND" jdbcType="VARCHAR" property="command"/>
@@ -12,8 +12,23 @@
         <result column="CONTENT" jdbcType="VARCHAR" property="content"/>
     </resultMap>
 
-    <select id="queryMessageList" parameterType="com.sunnywr.bean.Message" resultMap="MessageResult">
+    <sql id="columns">ID,COMMAND,DESCRIPTION,CONTENT</sql>
+
+    <select id="queryMessageList" parameterType="java.util.Map" resultMap="MessageResult">
         SELECT <include refid="columns"/> FROM message
+        <where>
+            <if test="message.command != null and !&quot;&quot;.equals(message.command.trim())">
+                AND COMMAND=#{message.command}
+            </if>
+            <if test="message.description != null and !&quot;&quot;.equals(message.description.trim())">
+                AND DESCRIPTION LIKE '%' #{message.description} '%'
+            </if>
+        </where>
+        ORDER BY ID LIMIT #{page.dbIndex},#{page.dbNumber}
+    </select>
+
+    <select id="count"  parameterType="com.sunnywr.bean.Message" resultType="int">
+        SELECT COUNT(*) FROM message
         <where>
             <if test="command != null and !&quot;&quot;.equals(command.trim())">
                 AND COMMAND=#{command}
@@ -24,7 +39,18 @@
         </where>
     </select>
 
-    <sql id="columns">ID,COMMAND,DESCRIPTION,CONTENT</sql>
+    <select id="queryMessageListByPage" parameterType="java.util.Map" resultMap="MessageResult">
+        SELECT <include refid="columns"/> FROM message
+        <where>
+            <if test="message.command != null and !&quot;&quot;.equals(message.command.trim())">
+                AND COMMAND=#{message.command}
+            </if>
+            <if test="message.description != null and !&quot;&quot;.equals(message.description.trim())">
+                AND DESCRIPTION LIKE '%' #{message.description} '%'
+            </if>
+        </where>
+        ORDER BY ID
+    </select>
 
     <delete id="deleteOne" parameterType="int">
         DELETE FROM message WHERE ID = #{_parameter}
