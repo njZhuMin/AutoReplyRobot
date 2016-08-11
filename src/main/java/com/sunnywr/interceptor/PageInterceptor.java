@@ -3,7 +3,6 @@ package com.sunnywr.interceptor;
 import com.sunnywr.entity.Page;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.javassist.bytecode.annotation.IntegerMemberValue;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
@@ -51,6 +50,7 @@ public class PageInterceptor implements Interceptor {
 
             // 带分页查询的SQL语句
             String pageSql = sql + " LIMIT " + page.getDbIndex() + "," + page.getDbNumber();
+            // 修改原sql语句
             metaObject.setValue("delegate.boundSql.sql", pageSql);
         }
         return invocation.proceed();
